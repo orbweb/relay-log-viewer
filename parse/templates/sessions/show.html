@@ -1,23 +1,30 @@
 <html>
     <head>
         <title>Sessions</title>
+        {% include 'static.html' %}
     </head>
     <body>
-        <table>
-        <tr>
-            <th>UID</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Active?</th>
-        </tr>
-        {% for session in sessions %}
-            <tr>
-                <td>{{ session.uid }}</td>
-                <td>{{ session.start_time }}</td>
-                <td>{{ session.end_time }}</td>
-                <td>{{ session.active }}</td>
-            </tr>
-        {% endfor %}
-        </table>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <table class="table">
+                        <tr>
+                            <th>UID</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Active?</th>
+                        </tr>
+                        {% for session in sessions %}
+                        <tr>
+                            <td>{{ session.uid }}</td>
+                            <td>{{ session.start_time }}</td>
+                            <td>{{ session.end_time }}</td>
+                            <td>{{ session.active }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
