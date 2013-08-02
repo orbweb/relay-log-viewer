@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Sessions</title>
+    </head>
+    <body>
+        <table>
+        <tr>
+            <th>UID</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Active?</th>
+        </tr>
+        {% for session in sessions %}
+            <tr>
+                <td>{{ session.uid }}</td>
+                <td>{{ session.start_time }}</td>
+                <td>{{ session.end_time }}</td>
+                <td>{{ session.active }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </body>
+</html>
