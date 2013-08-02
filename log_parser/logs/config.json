@@ -1,0 +1,27 @@
+{
+  "files": [
+    {
+      "columns": [
+        "timestamp",
+        "uid",
+        "start_time",
+        "end_time",
+        "bytes",
+        "client_ip",
+        "client_port",
+        "device_ip",
+        "device_port",
+        "end_reason"
+      ],
+      "convert_from_unix": [
+        "start_time",
+        "end_time"
+      ],
+      "model_name": "RelayEntry",
+      "pattern": "Relay*.txt",
+      "tzinfo": {
+        "timestamp": "US/Eastern"
+      }
+    }
+  ]
+}

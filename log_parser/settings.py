@@ -117,14 +117,16 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'parse',
+    'viewer',
+    'django_extensions',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -157,3 +159,6 @@ LOGGING = {
         },
     }
 }
+
+LOGS_PATH = os.path.join(ROOT_PATH, 'logs/logs/')
+LOG_CONFIG_PATH = os.path.join(ROOT_PATH, 'logs/config.json')
