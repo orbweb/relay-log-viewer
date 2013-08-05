@@ -1,9 +1,9 @@
-<html>
+<html ng-app="sessions">
     <head>
         <title>Sessions</title>
         {% include 'static.html' %}
     </head>
-    <body>
+    <body ng-controller="SessionListCtrl">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -14,14 +14,14 @@
                             <th>End Time</th>
                             <th>Active?</th>
                         </tr>
-                        {% for session in sessions %}
-                        <tr>
+                        {% verbatim %}
+                        <tr ng-repeat="session in sessions">
                             <td>{{ session.uid }}</td>
                             <td>{{ session.start_time }}</td>
                             <td>{{ session.end_time }}</td>
                             <td>{{ session.active }}</td>
                         </tr>
-                        {% endfor %}
+                        {% endverbatim %}
                     </table>
                 </div>
             </div>
