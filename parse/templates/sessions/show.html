@@ -7,15 +7,38 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
+                    {% verbatim %}
+                    <h1>Sessions ({{sessions.length }})</h1>
+                    {% endverbatim %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
                     <table class="table">
                         <tr>
-                            <th>UID</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Active?</th>
+                            <th ng-click="pred='uid'; reverse=!reverse;">
+                                <a href="">
+                                    UID
+                                </a>
+                            </th>
+                            <th ng-click="pred='start_time'; reverse=!reverse;">
+                                <a href="">
+                                    Start Time
+                                </a>
+                            </th>
+                            <th ng-click="pred='end_time'; reverse=!reverse;">
+                                <a href="">
+                                    End Time
+                                </a>
+                            </th>
+                            <th>
+                                Active?
+                                <input type="checkbox" ng-change="getActive()" ng-model="active"/>
+                                <a href="" ng-click="getActive('all')">(All)</a>
+                            </th>
                         </tr>
                         {% verbatim %}
-                        <tr ng-repeat="session in sessions">
+                        <tr ng-repeat="session in sessions | orderBy:pred:reverse">
                             <td>{{ session.uid }}</td>
                             <td>{{ session.start_time }}</td>
                             <td>{{ session.end_time }}</td>

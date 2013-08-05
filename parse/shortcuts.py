@@ -8,7 +8,6 @@ def json_response(a_dict, dump=True):
 
 
 def dict_dates_to_str(a_list):
-    print type(a_list[0]['start_time'])
     for obj in a_list:
         for k, v in obj.iteritems():
             if isinstance(v, datetime):

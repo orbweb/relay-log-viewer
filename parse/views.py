@@ -13,9 +13,15 @@ def show_sessions(request):
         'sessions': sessions
     })
 
-def get_sessions(request):
+def get_sessions(request, active):
     page = request.GET.get('page')
-    sessions = RelaySession.objects.all().order_by('start_time').values()
+    if active == 'all':
+        sessions = RelaySession.objects.all().order_by('-start_time').values()
+    else:
+        active = True if active=='true' else False
+        sessions = RelaySession.objects.filter(
+            active=active).order_by('-start_time').values()
+
     if page:
         pag = Paginator(sessions, 500)
         try:
