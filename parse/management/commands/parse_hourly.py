@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.db.transaction import commit_on_success
 import re
 from glob import glob
 from datetime import datetime
@@ -65,13 +66,33 @@ def files_lines(files):
                 yield line
 
 
+@commit_on_success
+def update_objs(objs):
+    for obj in objs:
+        obj.save()
+
+
 # http://docs.python.org/2/library/bisect.html#searching-sorted-lists
 def obj_index(obj, objs):
     i = bisect_left(objs, obj)
     if i != len(objs) and objs[i] == obj:
         return i
-    #print '%s closest: %s' % (map(str, obj), map(str, objs[i]))
     return None
+
+def match_sessions_with_entries(sessions):
+    uids, dates = zip(*[(session.uid, session.start_time)
+        for session in sessions if session.start_time is not None])
+    relay_entries = list(RelayEntry.objects.filter(uid__in=uids).order_by(
+        'uid', 'start_time'))
+
+    relay_entry_tuples = [(obj.uid, obj.start_time) for obj in relay_entries]
+    for session in sessions:
+        index = obj_index((session.uid, session.start_time), relay_entry_tuples)
+        if index:
+            session.end_time = relay_entries[index].end_time
+            session.active = False
+
+    return sessions
 
 def log_relay_objs(files):
     started_session_objs = []
@@ -88,41 +109,28 @@ def log_relay_objs(files):
         for obj in started_session_objs if obj.start_time is not None])
     relay_entries = list(RelayEntry.objects.filter(uid__in=uids).order_by(
         'uid', 'start_time'))
-    #print 'len(started_session_objs) = %d' % len(started_session_objs)
-    #print 'len(relay_entries) = %d' % len(relay_entries)
     relay_entry_tuples = [(obj.uid, obj.start_time) for obj in relay_entries]
-    found_count = 0
-    none_count = 0
     for session in started_session_objs:
         index = obj_index((session.uid, session.start_time), relay_entry_tuples)
         if index:
             session.end_time = relay_entries[index].end_time
             session.active = False
 
+    match_sessions_with_entries(started_session_objs)
+
     return started_session_objs
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        # update old sessions that don't have an end time
+        updated_sessions = match_sessions_with_entries(
+            RelaySession.objects.filter(end_time=None))
+        update_objs(updated_sessions)
+
         hourly_name_re = re.compile('\d+.txt')
         hourly_logs = (name for name in glob(os.path.join(LOGS_PATH, '*.txt'))
             if hourly_name_re.search(name))
 
-        '''
-        counts = {}
-        log_counts = 0
-        for log_name in hourly_logs:
-            #print 'Processing %s...' % log_name
-            log_counts += 1
-            with open(log_name, 'r') as log:
-                # order of lines matters, so we cannot use a 'findall'
-                # like method
-                objs = list(log_relay_objs(log))
-                RelaySession.objects.bulk_create(objs)
-        '''
         sessions = log_relay_objs(hourly_logs)
-        print sessions
-        print len(sessions)
         RelaySession.objects.bulk_create(sessions)
-
-        #print 'processed: %d' % log_counts
