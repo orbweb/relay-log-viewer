@@ -11,6 +11,6 @@ def dict_dates_to_str(a_list):
     for obj in a_list:
         for k, v in obj.iteritems():
             if isinstance(v, datetime):
-                obj[k] = str(v)
+                obj[k] = v.isoformat()
 
     return list(a_list)

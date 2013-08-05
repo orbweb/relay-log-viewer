@@ -40,8 +40,8 @@
                         {% verbatim %}
                         <tr ng-repeat="session in sessions | orderBy:pred:reverse">
                             <td>{{ session.uid }}</td>
-                            <td>{{ session.start_time }}</td>
-                            <td>{{ session.end_time }}</td>
+                            <td>{{ session.start_time | date:'medium' }}</td>
+                            <td>{{ session.end_time | date:'medium'  }}</td>
                             <td>{{ session.active }}</td>
                         </tr>
                         {% endverbatim %}
