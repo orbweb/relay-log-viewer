@@ -118,6 +118,7 @@ def log_relay_objs(files):
         if index:
             session.end_time = relay_entries[index].end_time
             session.active = False
+            session.relay_entry = relay_entries[index]
 
     match_sessions_with_entries(started_session_objs)
 

@@ -6,7 +6,7 @@ class RelayEntry(models.Model):
     uid = models.CharField(_('UID'), max_length=32)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    bytes = models.PositiveIntegerField(_('Device'))
+    data = models.PositiveIntegerField(_('Data'))
     client_ip = models.IPAddressField(_('Client IP'))
     client_port = models.PositiveIntegerField()
     device_ip = models.IPAddressField(_('Device IP'))
@@ -21,6 +21,7 @@ class RelaySession(models.Model):
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
     active = models.BooleanField(default=True)
+    relay_entry = models.ForeignKey('RelayEntry', null=True, blank=True)
 
     def __unicode__(self):
         if self.start_time:

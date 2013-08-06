@@ -6,7 +6,7 @@
         "uid",
         "start_time",
         "end_time",
-        "bytes",
+        "data",
         "client_ip",
         "client_port",
         "device_ip",
