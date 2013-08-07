@@ -163,3 +163,4 @@ LOGGING = {
 
 LOGS_PATH = os.path.join(ROOT_PATH, 'logs/logs/')
 LOG_CONFIG_PATH = os.path.join(ROOT_PATH, 'logs/config.json')
+HOURLY_LOG_CONFIG_PATH = os.path.join(ROOT_PATH, 'logs/hourly_config.json')

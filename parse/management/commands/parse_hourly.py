@@ -8,8 +8,10 @@ import os
 from parse.models import RelaySession, RelayEntry
 from pytz import timezone
 from bisect import bisect_left
+import json
 
 LOGS_PATH = settings.LOGS_PATH
+HOURLY_CONFIG = settings.HOURLY_LOG_CONFIG_PATH
 
 # (name regex, split regex, create new object)
 line_types = [
@@ -80,17 +82,18 @@ def obj_index(obj, objs):
     return None
 
 def match_sessions_with_entries(sessions):
-    uids, dates = zip(*[(session.uid, session.start_time)
-        for session in sessions if session.start_time is not None])
-    relay_entries = list(RelayEntry.objects.filter(uid__in=uids).order_by(
-        'uid', 'start_time'))
+    if len(sessions) > 0:
+        uids, dates = zip(*[(session.uid, session.start_time)
+            for session in sessions if session.start_time is not None])
+        relay_entries = list(RelayEntry.objects.filter(uid__in=uids).order_by(
+            'uid', 'start_time'))
 
-    relay_entry_tuples = [(obj.uid, obj.start_time) for obj in relay_entries]
-    for session in sessions:
-        index = obj_index((session.uid, session.start_time), relay_entry_tuples)
-        if index:
-            session.end_time = relay_entries[index].end_time
-            session.active = False
+        relay_entry_tuples = [(obj.uid, obj.start_time) for obj in relay_entries]
+        for session in sessions:
+            index = obj_index((session.uid, session.start_time), relay_entry_tuples)
+            if index:
+                session.end_time = relay_entries[index].end_time
+                session.active = False
 
     return sessions
 
@@ -128,9 +131,26 @@ class Command(BaseCommand):
             RelaySession.objects.filter(end_time=None))
         update_objs(updated_sessions)
 
-        hourly_name_re = re.compile('\d+.txt')
-        hourly_logs = (name for name in glob(os.path.join(LOGS_PATH, '*.txt'))
-            if hourly_name_re.search(name))
+        hourly_name_re = re.compile('/\d+.txt')
+        with open(HOURLY_CONFIG, 'r') as jsonf:
+            json_data = json.loads(jsonf.read())
+            if 'latest' in json_data and json_data['latest']:
+                hourly_logs = sorted([name
+                    for name in glob(os.path.join(LOGS_PATH, '*.txt'))
+                    if name > json_data['latest'] and \
+                    hourly_name_re.search(name)])
+                if len(hourly_logs) > 0:
+                    json_data['latest'] = hourly_logs[-1]
+            else:
+                hourly_logs = sorted([name
+                    for name in glob(os.path.join(LOGS_PATH, '*.txt'))
+                    if hourly_name_re.search(name)])
+                json_data['latest'] = hourly_logs[-1]
 
-        sessions = log_relay_objs(hourly_logs)
-        RelaySession.objects.bulk_create(sessions)
+            if len(hourly_logs) > 0:
+                sessions = log_relay_objs(hourly_logs)
+                RelaySession.objects.bulk_create(sessions)
+
+        with open(HOURLY_CONFIG, 'w') as jsonf:
+            jsonf.write(json.dumps(json_data, sort_keys=True, indent=2,
+                                   separators=(',', ': ')))

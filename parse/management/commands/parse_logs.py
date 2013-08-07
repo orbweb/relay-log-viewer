@@ -36,6 +36,8 @@ class Command(BaseCommand):
                     log_names = sorted([
                         name for name in glob(file_json['pattern'])
                         if name > file_json['latest']])
+                    if len(log_names) > 0:
+                        file_json['latest'] = log_names[-1]
                 else:
                     log_names = sorted(glob(os.path.join(
                         LOGS_PATH, file_json['pattern'])))
