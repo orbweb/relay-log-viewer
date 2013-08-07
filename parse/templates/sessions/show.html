@@ -1,7 +1,13 @@
+{% load staticfiles %}
 <html ng-app="sessions">
     <head>
         <title>Sessions</title>
         {% include 'static.html' %}
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular-resource.min.js"></script>
+        <script src="{% static 'js/app.js' %}"></script>
+        <script src="{% static 'js/services.js' %}"></script>
+        <script src="{% static 'js/controllers.js' %}"></script>
     </head>
     <body ng-controller="SessionListCtrl">
         <div class="container">

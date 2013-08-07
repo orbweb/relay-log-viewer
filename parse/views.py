@@ -31,3 +31,18 @@ def get_sessions(request, active):
 
     #return json_response(serializers.serialize('json', sessions, fields=('uid', 'start_time', 'end_time', 'active')), dump=False)
     return json_response(dict_dates_to_str(sessions))
+
+def charts(request):
+    return render(request, 'sessions/charts.html', {})
+
+def charts_json(request, chart_type):
+    if chart_type == 'pie':
+        uid_data_counts = {}
+        relay_sessions = RelaySession.objects.filter(active=False).select_related('relay_entry__data')
+        for session in relay_sessions:
+            if session.uid not in uid_data_counts:
+                uid_data_counts[session.uid] = 0
+            uid_data_counts[session.uid] += session.relay_entry.data
+        uid_data_counts = [{'uid': k, 'data': v}
+            for k, v in uid_data_counts.iteritems()]
+        return json_response(uid_data_counts)

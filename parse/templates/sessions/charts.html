@@ -1,0 +1,36 @@
+{% load staticfiles %}
+<html>
+<head>
+    <title>Charts</title>
+    {% include 'static.html' %}
+    <style>
+        body {
+            font: 10px sans-serif;
+        }
+
+        .arc path {
+            stroke: #FFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <h1>Data Usage per UID</h1>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div id="pie-chart"></div>
+            </div>
+            <div class="col-6">
+                <table class="table" id="pie-data">
+                <thead></thead>
+                <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
+    <script src="{% static 'js/charts.js' %}"></script>
+</body>
+</html>
