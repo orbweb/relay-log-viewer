@@ -1,0 +1,7 @@
+Django==1.5.1
+argparse==1.2.1
+django-extensions==1.1.1
+numpy==1.7.1
+pytz==2013b
+simplejson==3.3.0
+wsgiref==0.1.2

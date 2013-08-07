@@ -29,6 +29,20 @@
                 </table>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-hover">
+                    <tbody>
+                    {% for stat in stats %}
+                        <tr>
+                            <td>{{ stat.name }}</td>
+                            <td>{{ stat.val }} {{ stat.units }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
     <script src="{% static 'js/charts.js' %}"></script>
