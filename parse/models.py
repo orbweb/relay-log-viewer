@@ -28,3 +28,18 @@ class RelaySession(models.Model):
             return '%s (%s)' % (self.uid, self.start_time)
         else:
             return '%s (%s)' % (self.uid, 'Active' if self.active else 'Archived')
+
+class DataflowMonth(models.Model):
+    year = models.PositiveSmallIntegerField()
+    month = models.PositiveSmallIntegerField()
+    packets_sent = models.IntegerField('Packets Sent')
+    packets_recieved = models.IntegerField('Packets Recieved')
+    bytes_sent = models.IntegerField('Bytes Sent')
+    bytes_recieved = models.IntegerField('Bytes Recieved')
+    relay_packets = models.IntegerField()
+    relay_bytes = models.IntegerField()
+    relay_connections = models.IntegerField('Number of Relay Connections')
+    p2p_connections = models.IntegerField('Number of P2P Connections')
+
+    def __unicode__(self):
+        return '%d/%d' % (self.month, self.year)
