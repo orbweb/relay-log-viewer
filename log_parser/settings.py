@@ -164,3 +164,11 @@ LOGGING = {
 LOGS_PATH = os.path.join(ROOT_PATH, 'logs/logs/')
 LOG_CONFIG_PATH = os.path.join(ROOT_PATH, 'logs/config.json')
 HOURLY_LOG_CONFIG_PATH = os.path.join(ROOT_PATH, 'logs/hourly_config.json')
+
+END_REASONS = {
+    1: 'ClientStop',
+    2: 'DeviceStop',
+    3: 'ServerStop',
+    4: 'TimeOut',
+    0: 'Unknown',
+}

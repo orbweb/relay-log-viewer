@@ -3,6 +3,7 @@
 <head>
     <title>Charts</title>
     {% include 'static.html' %}
+    <link rel="stylesheet" href="{% static 'css/chart.css' %}" />
     <style>
         body {
             font: 10px sans-serif;
@@ -16,21 +17,8 @@
 <body>
     <div class="container">
         <div class="row">
-            <h1>Data Usage per UID</h1>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <div id="pie-chart"></div>
-            </div>
-            <div class="col-6">
-                <table class="table" id="pie-data">
-                <thead></thead>
-                <tbody></tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-12">
+                <h1>Session Statistics</h1>
                 <table class="table table-hover">
                     <tbody>
                     {% for stat in stats %}
@@ -43,8 +31,39 @@
                 </table>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <h1>End Reasons</h1>
+            </div>
+            <div class="col-6">
+                <div class="chart" id="end-reasons-chart"></div>
+            </div>
+            <div class="col-6">
+                <table class="table" id="end-reasons-data">
+                <thead></thead>
+                <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h1>Data Usage per UID</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="chart" id="uid-data-chart"></div>
+            </div>
+            <div class="col-6">
+                <table class="table" id="uid-data-data">
+                <thead></thead>
+                <tbody></tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
+    <script src="{% static 'js/pie.js' %}"></script>
     <script src="{% static 'js/charts.js' %}"></script>
 </body>
 </html>
