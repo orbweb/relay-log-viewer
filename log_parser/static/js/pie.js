@@ -21,14 +21,20 @@ var Pie = function(pie_chart_id, pie_data_id, table_columns, data_url, width, he
 
   var pie_data = d3.select(pie_data_id);
 
-  d3.json(data_url, function(error, data) {
-
-    data.forEach(function(d) {
-      d.data = +d.data;
-      d.human_data = Math.floor(d.data)
-        .toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  var data = [];
+  var getData = function(url) {
+    d3.json(url, function(error, ret_data) {
+      data = ret_data;
+      data.forEach(function(d) {
+        d.data = +d.data;
+        d.human_data = Math.floor(d.data)
+          .toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      });
+      draw();
     });
+  }(data_url);
 
+  var draw = function () {
     var g = svg.selectAll('.arc')
         .data(pie(data))
       .enter().append('g')
@@ -60,8 +66,6 @@ var Pie = function(pie_chart_id, pie_data_id, table_columns, data_url, width, he
     var columns = rows.selectAll('td')
       .data(function(data) {
         return table_columns.map(function(column) {
-          console.log(data);
-          console.log(column.col_name);
           return {column: column, value: data[column.col_name]};
         });
       })
@@ -87,6 +91,5 @@ var Pie = function(pie_chart_id, pie_data_id, table_columns, data_url, width, he
       var text = pie_data.selectAll(pie_data_id + ' #' + d.category)
         .style('background', '#FFF');
     };
-
-  });
-}
+  };
+};
