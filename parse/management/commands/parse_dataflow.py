@@ -17,8 +17,8 @@ COL_NAMES = (
     'bytes_recieved',
     'relay_packets',
     'relay_bytes',
+    'p2p_connections',
     'relay_connections',
-    'p2p_connections'
 )
 
 def line_to_cols(line):
