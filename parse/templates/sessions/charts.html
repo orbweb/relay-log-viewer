@@ -40,9 +40,45 @@
             </div>
             <div class="col-6">
                 <table class="table" id="end-reasons-data">
-                <thead></thead>
-                <tbody></tbody>
+                    <thead></thead>
+                    <tbody></tbody>
                 </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h1>Relay/P2P Connection Counts</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div id="relay-p2p-chart" class="chart"></div>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-12">
+                        <table id="relay-p2p-data" class="table">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label for="month">Month</label>
+                        <select id="month" class="form-control">
+                        {% for month in months %}
+                            <option value="{{ month }}">{{ month }}</option>
+                        {% endfor %}
+                        </select>
+                        <label for="year">Year</label>
+                        <select id="year" class="form-control">
+                        {% for year in years %}
+                            <option value="{{ year }}">{{ year }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -56,14 +92,16 @@
             </div>
             <div class="col-6">
                 <table class="table" id="uid-data-data">
-                <thead></thead>
-                <tbody></tbody>
+                    <thead></thead>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
     </div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="{% static 'js/pie.js' %}"></script>
+    <script src="{% static 'js/pie2.js' %}"></script>
     <script src="{% static 'js/charts.js' %}"></script>
 </body>
 </html>

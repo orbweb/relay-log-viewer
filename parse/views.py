@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.conf import settings
-from parse.models import RelaySession, RelayEntry
-from parse.shortcuts import json_response, dict_dates_to_str
+from parse.models import RelaySession, RelayEntry, DataflowMonth
+from parse.shortcuts import json_response, dict_dates_to_str, verbose_name
 from django.core import serializers
 import simplejson
 import numpy
 from collections import Counter
+from random import random
 
 
 def show_sessions(request):
@@ -42,6 +43,12 @@ def charts(request):
     relay_sessions = RelaySession.objects.filter(active=False).select_related(
         'relay_entry__data')
     data_transfer_list = [rs.relay_entry.data for rs in relay_sessions]
+
+    months = [df['month']
+        for df in DataflowMonth.objects.all().values('month').distinct()]
+    years = [df['year']
+        for df in DataflowMonth.objects.all().values('year').distinct()]
+
     stats = [
         {
             'name': 'Average data transfered per session',
@@ -64,6 +71,8 @@ def charts(request):
     ]
     return render(request, 'sessions/charts.html', {
         'stats': stats,
+        'months': months,
+        'years': years,
     })
 
 
@@ -90,3 +99,27 @@ def charts_json(request, chart_type):
         counts = [{'category': settings.END_REASONS[k], 'data': v}
                   for k, v in end_reason_counts.iteritems()]
         return json_response(counts)
+
+    elif chart_type == 'relay_p2p_counts':
+        attrs = ('month', 'year')
+        res_attrs = ('p2p_connections', 'relay_connections')
+        if all(k in request.GET for k in attrs):
+            try:
+                dataflow_month = DataflowMonth.objects.get(
+                    month=request.GET.get('month'),
+                    year=request.GET.get('year'))
+                return json_response(
+                    [{'category': verbose_name(DataflowMonth, attr, space=False),
+                        'data': getattr(dataflow_month, attr)}
+                        for attr in res_attrs])
+            except DataflowMonth.DoesNotExist:
+                return json_response([])
+        else:
+            relay_p2p_counts = Counter()
+            dataflow_months = DataflowMonth.objects.all()
+            for dataflow_month in dataflow_months:
+                relay_p2p_counts['OverallRelayConnections'] += dataflow_month.relay_connections
+                relay_p2p_counts['OverallP2PConnections'] += dataflow_month.p2p_connections
+            counts = [{'category': k, 'data': v}
+                for k, v in relay_p2p_counts.iteritems()]
+            return json_response(counts)
