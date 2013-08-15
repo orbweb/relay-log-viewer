@@ -10,6 +10,10 @@ $ ./manage.py parse_dataflow
 # Parse hourly logs and link them with their corresponding Relay*.txt entries
 $ ./manage.py parse_logs
 $ ./manage.py parse_hourly
+
+# Reset name of last log processed for Relay*.txt and hourly logs
+# Used if you reset the database and need to process all logs again
+$ ./manage.py reset_configs
 ```
 
 Configuration
